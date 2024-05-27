@@ -20,7 +20,7 @@ const npmPackages = {
 Package.onUse(function (api) {
   Npm.depends(npmPackages);
 
-  api.versionsFrom(['2.8.1', '2.9.1', '3.0-beta.0']);
+  api.versionsFrom(['3.0-rc.2']);
 
   var packages = [
     'ecmascript',
@@ -32,14 +32,14 @@ Package.onUse(function (api) {
     'mongo',
 
     // https://github.com/Meteor-Community-Packages/meteor-collection-hooks/
-    'matb33:collection-hooks@1.3.1',
+    'matb33:collection-hooks@2.0.0-beta.1',
 
     // https://github.com/Meteor-Community-Packages/meteor-publish-composite
-    'reywood:publish-composite@1.8.6',
+    'reywood:publish-composite@1.8.9',
 
     // Note: not working
     // https://github.com/Meteor-Community-Packages/mongo-collection-instances
-    'dburles:mongo-collection-instances@1.0.0-beta300.1',
+    'dburles:mongo-collection-instances@1.0.0-beta300.2',
 
     // Note: seems to be not working. Getting weird conflict that cultofcoders:grapher@1.5.0 depends on version 0.1.0
     // https://github.com/peerlibrary/meteor-subscription-scope
@@ -68,9 +68,9 @@ Package.onTest(function (api) {
     'random',
     'ecmascript',
     'underscore',
-    'matb33:collection-hooks@1.3.1',
-    'reywood:publish-composite@1.8.6',
-    'dburles:mongo-collection-instances@1.0.0-beta300.1',
+    'matb33:collection-hooks@2.0.0-beta.1',
+    'reywood:publish-composite@1.8.9',
+    'dburles:mongo-collection-instances@1.0.0-beta300.2',
     // 'herteby:denormalize@0.6.7',
     'mongo',
   ];
