@@ -22,6 +22,9 @@ Package.onUse(function (api) {
 
   api.versionsFrom(['3.0-rc.2']);
 
+  api.addFiles('lib/scoping/client.js', 'client');
+  api.addFiles('lib/scoping/server.js', 'server');
+
   var packages = [
     'ecmascript',
     'underscore',
@@ -59,6 +62,9 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.use('cultofcoders:grapher');
 
+  // api.addFiles('lib/scoping/client.js', 'client');
+  // api.addFiles('lib/scoping/server.js', 'server');
+
   Npm.depends({
     ...npmPackages,
     chai: '4.3.4',
@@ -71,6 +77,7 @@ Package.onTest(function (api) {
     'matb33:collection-hooks@2.0.0-rc.1',
     'reywood:publish-composite@1.8.9',
     'dburles:mongo-collection-instances@1.0.0-rc300.1',
+    // 'peerlibrary:subscription-scope@0.5.0',
     // 'herteby:denormalize@0.6.7',
     'mongo',
   ];
