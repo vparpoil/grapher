@@ -21,6 +21,9 @@ jobs:
           meteor create --release ${{ matrix.meteor }} --bare test
           cd test
           meteor npm i --save puppeteer chai
+          mkdir packages
+          cd packages
+          git clone -b update/meteor-3.0 https://github.com/bhunjadi/denormalize.git
 
       - name: Test
         working-directory: ./test
