@@ -20,7 +20,7 @@ const npmPackages = {
 Package.onUse(function (api) {
   Npm.depends(npmPackages);
 
-  api.versionsFrom(['3.0-rc.2']);
+  api.versionsFrom(['3.0']);
 
   api.addFiles('lib/scoping/client.js', 'client');
   api.addFiles('lib/scoping/server.js', 'server');
@@ -48,9 +48,8 @@ Package.onUse(function (api) {
     // https://github.com/peerlibrary/meteor-subscription-scope
     // 'peerlibrary:subscription-scope@0.5.0',
 
-    // Note: not working
     // https://github.com/Meteor-Community-Packages/denormalize/
-    // 'herteby:denormalize@0.6.7',
+    'herteby:denormalize@0.7.0-beta.0',
   ];
 
   api.use(packages);
@@ -78,7 +77,7 @@ Package.onTest(function (api) {
     'reywood:publish-composite@1.8.9',
     'dburles:mongo-collection-instances@1.0.0-rc300.1',
     // 'peerlibrary:subscription-scope@0.5.0',
-    // 'herteby:denormalize@0.6.7',
+    'herteby:denormalize@0.7.0-beta.0',
     'mongo',
   ];
 
