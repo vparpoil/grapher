@@ -81,7 +81,18 @@ declare module 'meteor/cultofcoders:grapher' {
     [Key: string]: unknown;
   };
 
-  export type Body = Mongo.FieldSpecifier;
+  export type BodyFields = {
+    [Key: string]: number | BodyFields;
+  };
+
+  // Idea is that we have $filters on T, i.e. the actual document.
+  // But body should be defined based on links.
+  // TODO: nesting?
+  export type Body<T, WithLinks = string> = {
+    $options?: Options;
+    $filters?: Mongo.Query<T>;
+    [Key: WithLinks]: number | Body<T, WithLinks[Key]>;
+  };
 
   export class LinkBaseClass {
     constructor<T, U = T>(
@@ -154,9 +165,12 @@ declare module 'meteor/cultofcoders:grapher' {
   export type Filters<T = object> = Mongo.Query<T>;
   export type Options<T = object> = Mongo.Options<T>;
 
+  export type ValidateParamsFn = (params: P) => void | Promise<void>;
+  export type ValidateParamsParam = boolean | ValidateParamsFn;
+
   export type QueryOptions<T = object, P = Params> = Mongo.Options<T> & {
-    params?: Params;
-    validateParams?: boolean | ((params: P) => void);
+    params?: P;
+    validateParams?: ValidateParamsParam;
   };
 
   export type QueryFetchContext<T> = {
@@ -192,17 +206,35 @@ declare module 'meteor/cultofcoders:grapher' {
     static getConfig(): ExposureConfig;
   }
 
-  export class QueryBaseClass<T> {
+  export type DataCallback = <T = unknown>(err: unknown, data: T) => void;
+
+  export interface QueryBase {
+    // client-side
+    fetch(callback: DataCallback): void;
+    fetchAsync(): Promise<unknown>;
+    // @deprecated
+    fetchSync(): Promise<unknown>;
+
+    fetchOneAsync(): Promise<unknown>;
+    // @deprecated
+    fetchOneSync(): Promise<unknown>;
+
+    getCountAsync(): Promise<unknown>;
+    // @deprecated
+    getCountSync(): Promise<unknown>;
+  }
+
+  export class QueryBaseClass<T, P> implements QueryBase {
     isGlobalQuery: boolean;
 
     constructor(
       collection: Mongo.Collection<T>,
       body: Body,
-      options?: Options<T>,
+      options?: Options<T, P>,
     );
   }
 
-  export class NamedQueryBaseClass<T> {
+  export class NamedQueryBaseClass<T, P> {
     isNamedQuery: boolean;
 
     constructor(
@@ -210,8 +242,14 @@ declare module 'meteor/cultofcoders:grapher' {
       collection: Mongo.Collection<T>,
       name: string,
       body: Body,
-      options?: Options<T>,
+      options?: Options<T, P>,
     );
+
+    // client-side
+    fetch(callback: (err: unknown, res: unknown[]) => void): void;
+    fetchAsync(): Promise<unknown>;
+    fetchOneAsync(): Promise<unknown>;
+    getCountAsync(): Promise<unknown>;
   }
 
   export type HypernovaConfig<P = Params> = {
@@ -219,7 +257,22 @@ declare module 'meteor/cultofcoders:grapher' {
     bypassFirewalls?: boolean;
   };
 
-  export type CountEndpointFunction<T, U> = (request: unknown) => Mongo.Cursor<T, Mongo.DispatchTransform<O['transform'], T, U>>;
+  export type CountEndpointFunction<T, U> = (
+    request: unknown,
+  ) => Mongo.Cursor<T, Mongo.DispatchTransform<O['transform'], T, U>>;
+
+  type MeteorSubscribeCallbacks = {
+    onStop(err?: unknown): void;
+    onReady(): void;
+  };
+
+  function createQuery(
+    name: string,
+    body: Body,
+    options?: QueryOptions,
+  ): NamedQueryBaseClass;
+
+  function createQuery(body: Body, options?: QueryOptions): QueryBase;
 }
 
 namespace Grapher {
