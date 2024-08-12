@@ -156,7 +156,7 @@ declare module 'meteor/cultofcoders:grapher' {
     filters: { [key: string]: unknown },
     options: Mongo.Options<T>,
     userId?: string,
-  ) => void;
+  ) => void | Promise<void>;
 
   export type Params = {
     [key: string]: unknown;
@@ -210,7 +210,7 @@ declare module 'meteor/cultofcoders:grapher' {
 
   export interface QueryBase {
     // client-side
-    fetch(callback: DataCallback): void;
+    fetch(callback: DataCallback): unknown[];
     fetchAsync(): Promise<unknown>;
     // @deprecated
     fetchSync(): Promise<unknown>;
@@ -288,7 +288,7 @@ namespace Mongo {
       filters: Grapher.Filters<T>,
       options: Grapher.Options<T>,
       userId?: string,
-    ) => void;
+    ) => Promise<void>;
 
     addLinks(links: Record<string, Grapher.LinkConfig>): void;
     getLinker(name: string): Grapher.LinkerClass | undefined;
